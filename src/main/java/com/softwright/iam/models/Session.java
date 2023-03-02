@@ -10,7 +10,6 @@ import jakarta.persistence.*;
 public class Session {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private UUID id;
 	
 	@Column(nullable=false)
@@ -24,8 +23,8 @@ public class Session {
 	
 	public Session() {}
 
-	public Session(UUID id, UUID userId, Date created, Date expiry) {
-		this.id = id;
+	public Session(UUID userId, Date created, Date expiry) {
+		this.id = UUID.randomUUID();
 		this.userId = userId;
 		this.created = created;
 		this.expiry = expiry;

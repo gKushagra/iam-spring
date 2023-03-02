@@ -1,5 +1,6 @@
 package com.softwright.iam.controllers;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.NoSuchElementException;
@@ -10,7 +11,9 @@ import java.util.logging.Logger;
 
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +38,9 @@ import jakarta.servlet.http.HttpServletRequest;
 public class UserController {
 	
 	private final static Logger _logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
+	@Value("${iam.app.jwtSecret}")
+	private String secret;
 	
 	@Autowired
 	UserRepository userRepository;
@@ -48,9 +54,7 @@ public class UserController {
 	}
 	
 	@Bean
-	JWTUtil jwtUtil() {
-		return new JWTUtil();
-	}
+	JWTUtil jwtUtil() { return new JWTUtil(); }
 	
 	@GetMapping("/signup")
 	public String registrationPage(@RequestParam String redirectUri, @RequestParam Optional<String> error, Model model) {
@@ -115,22 +119,24 @@ public class UserController {
 			User user = userRepository.findByEmail(req.getEmail());	
 			if (user != null && passwordEncoder().matches(req.getPassword(), user.getHash())) {
 				_logger.log(Level.INFO, "POST /login checking if session exists");
-				Session existingSession = sessionRepository.findByUserId(user.getId());
 				Calendar cal = Calendar.getInstance();
 				Date issued = cal.getTime();
 				cal.add(Calendar.MINUTE, 60);
 				Date expiry = cal.getTime();
-				if (existingSession != null && existingSession.getExpiry().compareTo(issued) < 0){
+				Date curr = new Date();
+				Timestamp currTimestamp = new Timestamp(curr.getTime());
+				Session existingSession = sessionRepository.findByUserIdAndLessThanExpiry(user.getId(), issued);
+				if (existingSession != null && existingSession.getExpiry().compareTo(currTimestamp) > 0){
 					_logger.log(Level.INFO, "POST /login session already exists");
 					// use expiry from existing session
-					String token = jwtUtil().generateToken(user.getEmail(), issued, existingSession.getExpiry());
+					String token = jwtUtil().generateToken(user.getEmail(), issued, existingSession.getExpiry(), secret);
 					_logger.log(Level.INFO, "POST /login complete");
 					return new RedirectView(redirectUri+"?token="+token);	
 				} else {
-					_logger.log(Level.INFO, "POST /login session does not exit.");
-					Session newSession = new Session(UUID.randomUUID(), user.getId(), issued, expiry);
+					_logger.log(Level.INFO, "POST /login session does not exist.");
+					Session newSession = new Session(user.getId(), issued, expiry);
 					sessionRepository.save(newSession);
-					String token = jwtUtil().generateToken(user.getEmail(), issued, expiry);
+					String token = jwtUtil().generateToken(user.getEmail(), issued, expiry, secret);
 					_logger.log(Level.INFO, "POST /login complete");
 					return new RedirectView(redirectUri+"?token="+token);
 				}
@@ -154,17 +160,17 @@ public class UserController {
 			if (authHeader != null && !authHeader.isBlank() && authHeader.startsWith("Bearer ")) {
 				_logger.log(Level.INFO, "GET /verify token avl.");
 				String token = authHeader.split(" ")[1];
-				String claim = jwtUtil().validateTokenAndReturnClaims(token);
+				String claim = jwtUtil().validateTokenAndReturnClaims(token, secret);
 				if (claim.equals("Invalid Token") || claim.equals("Expired Token")) { unauthorized = true; } 
 				else {
 					_logger.log(Level.INFO, "GET /verify valid claim");
 					User user = userRepository.findByEmail(claim);
 					if (user != null) {
 						_logger.log(Level.INFO, "GET /verify valid user");
-						Session existingSession = sessionRepository.findByUserId(user.getId());
-						Calendar cal = Calendar.getInstance();
-						Date issued = cal.getTime();
-						if (existingSession == null || (existingSession != null && existingSession.getExpiry().compareTo(issued) >= 0)) { unauthorized = true; }
+						Date issued = new Date();
+						Timestamp issuedTimestamp = new Timestamp(issued.getTime());
+						Session existingSession = sessionRepository.findByUserIdAndLessThanExpiry(user.getId(), issued);
+						if (existingSession == null || (existingSession != null && existingSession.getExpiry().compareTo(issuedTimestamp) <= 0)) { unauthorized = true; }
 					}
 					else { unauthorized = true; }
 				}
