@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="ISO-8859-1">
+<link rel="icon" type="image/svg"
+	href="https://upload.wikimedia.org/wikipedia/commons/3/37/Encrypt_icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+	href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap"
+	rel="stylesheet">
+<title>SSO Login</title>
+<style type="text/css">
+ body {font-family: 'Ubuntu', sans-serif;width: 100vw;height: 98vh;display: flex;flex-direction: column;justify-content: center;align-items: center;background-color: #ECEFF1;}.sf-form-card {width: 30%;display: flex;flex-direction: column;border: 1px solid #263238;border-radius: 4px;background-color: #CFD8DC;}.sf-form-card-header {width: 100%;display: flex;flex-direction: column;align-items: center;margin-top: 16px;margin-bottom: 16px;}.sf-form-card-header-title {font-size: 24px;font-weight: 600;color: #263238;letter-spacing: 1px;}.sf-form-card-header-subtitle {font-size: 16px;font-weight: 400;color: #263238;letter-spacing: 0.5px;margin-top: 8px;}.sf-form-card-header-error {font-size: 16px;font-weight: 500;color: #E65100;letter-spacing: 0.5px;margin-top: 8px;}.sf-form-card-body {width: 100%;display: flex;flex-direction: column;}.sf-form-card-body input {width: 80%;margin: 16px auto 16px auto;padding: 8px 16px 8px 16px;font-size: 19px;font-weight: normal;color: #212121;background-color: #ECEFF1;border: 1px solid #263238;border-radius: 4px;}.sf-form-card-body button {width: 80%;margin: 16px auto 16px auto;padding: 8px 16px 8px 16px;font-size: 19px;font-weight: normal;color: #FAFAFA;background-color: #263238;border: 1px solid #263238;border-radius: 4px;letter-spacing: 1px;}.sf-form-card-body button:focus, .sf-form-card-body input:focus {outline: none;}.sf-form-card-body button:hover {cursor: pointer;}.sf-form-card-footer {width: 100%;margin-top: 16px;margin-bottom: 16px;display: flex;flex-direction: row;justify-content: center;align-items: center;}.sf-form-card-footer-title {font-size: 12px;font-weight: 100;color: #263238;letter-spacing: 0.5px;}@media screen and (max-width: 1080px) {.sf-form-card {width: 90% !important;}.sf-form-card-header-title {font-size: 64px;margin-top: 16px;}.sf-form-card-header-subtitle {font-size: 44px;margin-top: 12px;}.sf-form-card-header-error {font-size: 34px;margin-top: 12px;}.sf-form-card-body input, .sf-form-card-body button {font-size: 54px;margin: 24px auto 24px auto;}.sf-form-card-footer-title {font-size: 24px;margin-top: 16px;}}
+</style>
+</head>
+
+<body>
+	<div class="sf-form-card">
+		<div class="sf-form-card-header">
+			<div class="sf-form-card-header-title">Login</div>
+			<div class="sf-form-card-header-subtitle">Single Sign-On</div>
+			<div th:if="${error}" th:text="${error}" class="sf-form-card-header-error"></div>
+		</div>
+		<form th:action="@{${uri}}" th:object="${user}" method="post"
+			class="sf-form-card-body">
+			<input type="email" th:field="*{email}" placeholder="Email" required />
+			<input type="password" th:field="*{password}" placeholder="Password" required minlength="6" />
+			<button type="submit">Login</button>
+		</form>
+		<div class="sf-form-card-footer">
+			<div class="sf-form-card-footer-title">softwright.in</div>
+		</div>
+	</div>
+</body>
+
+</html>
