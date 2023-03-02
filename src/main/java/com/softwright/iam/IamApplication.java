@@ -11,7 +11,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan(basePackages="com.softwright.iam.*")
 @EntityScan(basePackages="com.softwright.iam.models")
 public class IamApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(IamApplication.class, args);
 	}
