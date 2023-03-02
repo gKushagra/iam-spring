@@ -40,7 +40,7 @@ jobs:
 
     - run: |
          echo "Run, Build Application using script"
-         ./buildscript.sh
+         /iam-spring/.github/workflows/buildscript.sh
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
