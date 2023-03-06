@@ -2,39 +2,145 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<meta charset="ISO-8859-1">
-<link rel="icon" type="image/svg"
-	href="https://upload.wikimedia.org/wikipedia/commons/3/37/Encrypt_icon.svg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link
-	href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap"
-	rel="stylesheet">
-<title>SSO Signup</title>
-<style type="text/css">
- body {font-family: 'Ubuntu', sans-serif;width: 100vw;height: 98vh;display: flex;flex-direction: column;justify-content: center;align-items: center;background-color: #E8F5E9;}.sf-form-card {width: 40%;display: flex;flex-direction: column;border: 1px solid #1B5E20;border-radius: 4px;background-color: #C8E6C9;}.sf-form-card-header {width: 100%;display: flex;flex-direction: column;align-items: center;margin-top: 16px;margin-bottom: 16px;}.sf-form-card-header-title {font-size: 24px;font-weight: 600;color: #1B5E20;letter-spacing: 1px;}.sf-form-card-header-subtitle {font-size: 16px;font-weight: 400;color: #1B5E20;letter-spacing: 0.5px;margin-top: 8px;}.sf-form-card-header-error {font-size: 16px;font-weight: 500;color: #BF360C;letter-spacing: 0.5px;margin-top: 8px;}.sf-form-card-body {width: 100%;display: flex;flex-direction: column;}.sf-form-card-body input {width: 80%;margin: 16px auto 16px auto;padding: 8px 16px 8px 16px;font-size: 19px;font-weight: normal;color: #212121;background-color: #E8F5E9;border: 1px solid #1B5E20;border-radius: 4px;}.sf-form-card-body button {width: 80%;margin: 16px auto 16px auto;padding: 8px 16px 8px 16px;font-size: 19px;font-weight: normal;color: #FAFAFA;background-color: #1B5E20;border: 1px solid #1B5E20;border-radius: 4px;letter-spacing: 1px;}.sf-form-card-body button:focus, .sf-form-card-body input:focus {outline: none;}.sf-form-card-body button:hover {cursor: pointer;}.sf-form-card-footer {width: 100%;margin-top: 16px;margin-bottom: 16px;display: flex;flex-direction: row;justify-content: center;align-items: center;}.sf-form-card-footer-title {font-size: 12px;font-weight: 100;color: #1B5E20;letter-spacing: 0.5px;}@media screen and (max-width: 1080px) {.sf-form-card {width: 90% !important;}.sf-form-card-header-title {font-size: 64px;margin-top: 16px;}.sf-form-card-header-subtitle {font-size: 44px;margin-top: 12px;}.sf-form-card-header-error {font-size: 34px;margin-top: 12px;}.sf-form-card-body input, .sf-form-card-body button {font-size: 54px;margin: 24px auto 24px auto;}.sf-form-card-footer-title {font-size: 24px;margin-top: 16px;}}
-</style>
+	<meta charset="ISO-8859-1">
+	<link rel="icon" type="image/svg" href="https://upload.wikimedia.org/wikipedia/commons/3/37/Encrypt_icon.svg">
+	<title>SSO Signup</title>
+	<style type="text/css">
+ 		body {font-family: "Poppins", sans-serif;font-size: 18px;font-weight: 400;}.spacer {flex-grow: 1;}.error-message {font-size: 12px;color: #d50000;font-weight: lighter;}button:hover, input:focus {animation: fadein 1s;}@keyframes fadein {from {opacity: 0;}to {opacity: 1;}}.progress {display: block;width: 100%;height: 4px;background-color: #fff;border: none;border-radius: 30px;}.signup-container {width: 100% !important;height: 98vh !important;display: flex;flex-direction: column;flex-wrap: nowrap;align-items: flex-start;justify-content: flex-start;background-color: #e8f5e9;border-radius: 10px;animation: fadein 2s;}.signup-container-col1 {width: 100%;flex-grow: 1;}.signup-container-col3 {width: 100%;flex-grow: 1;}.signup-container-col2 {width: 100%;display: flex;flex-direction: row;flex-wrap: nowrap;align-items: center;justify-content: center;}.signup-container-col2-card {border: 0.9px solid #e0e0e0;border-radius: 10px;width: 390px;box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 0 0 0 rgba(0, 0, 0, 0);display: flex;flex-direction: column;flex-wrap: nowrap;align-items: center;justify-content: center;padding: 8px 10px 8px 10px;margin: 1px;background-color: #fff;}.signup-container-col2-card-col1 {width: calc(100% - 14px);margin: 1px;padding: 4px 6px 4px 6px;display: flex;flex-direction: column;justify-content: flex-start;align-items: flex-start;}.signup-container-col2-card-col1-row1 p {font-size: 22px;color: #00c853;font-weight: 500;margin-block-start: 4px;margin-block-end: 1px;letter-spacing: 0.5px;}.signup-container-col2-card-col1-row1 p:hover {text-decoration: underline;cursor: pointer;}.signup-container-col2-card-col1-row2 p {font-size: 17px;color: #212121;font-weight: 500;margin-block-start: 2px;margin-block-end: 8px;letter-spacing: 0.5px;}.signup-container-col2-card-col2 {width: calc(100% - 14px);margin: 1px;padding: 4px 6px 4px 6px;display: flex;flex-direction: column;justify-content: center;align-items: center;}.signup-container-col2-card-col2 label {width: 100%;font-size: 14px;text-align: left !important;}.signup-container-col2-card-col2 input {width: calc(100% - 32px);border: 1.5px solid #e0e0e0;border-radius: 4px;background-color: #fff;padding: 6px 12px 6px 12px;margin: 3px 4px 14px 4px;color: #212121;font-size: 15px;height: 32px;letter-spacing: 0.5px;font-family: "Poppins", sans-serif;font-weight: 400;}.signup-container-col2-card-col2 input:focus {outline: #00c853 !important;border: 1.75px solid #00c853;}.signup-container-col2-card-col2-strength-bar {width: calc(100% - 32px);margin: 0 0 4px 0;padding: 0;}.signup-container-col2-card-col2 button {border: none;border-radius: 0;background-color: #fff;color: #00c853;font-size: 11px;margin-bottom: 8px;}.signup-container-col2-card-col2 button:hover {text-decoration: underline;cursor: pointer;}.signup-container-col2-card-col5 {width: calc(100% - 14px);margin: 1px;padding: 4px 6px 4px 6px;display: flex;flex-wrap: nowrap;flex-direction: row;justify-content: flex-start;align-items: center;}.signup-container-col2-card-col5-btn1 {border: none;border-radius: 0;background-color: #fff;font-size: 16px;color: #00c853;}.signup-container-col2-card-col5-btn1:hover {cursor: pointer;text-decoration: underline;}.signup-container-col2-card-col5-btn2 {border: none;border-radius: 4px;background-color: #00c853;color: #fff;font-weight: 500;font-size: 21px;padding: 6px 12px 6px 12px;}.signup-container-col2-card-col5-btn2:hover {cursor: pointer;background-color: #fff;color: #00c853;text-decoration: underline;}.signup-container-col2-card-col6 {width: calc(100% - 14px);margin: 12px 1px 1px 1px;padding: 6px auto 2px auto;}.signup-container-col2-card-col6 small {font-size: 11px;color: #bdbdbd;font-weight: 500;}
+    </style>
 </head>
 
 <body>
-	<div class="sf-form-card">
-		<div class="sf-form-card-header">
-			<div class="sf-form-card-header-title">Create Account</div>
-			<div class="sf-form-card-header-subtitle">Single Sign-On</div>
-			<div th:if="${error}" th:text="${error}" class="sf-form-card-header-error"></div>
-		</div>
-		<form th:action="@{${uri}}"
-			th:object="${user}" method="post" class="sf-form-card-body">
-			<input type="email" th:field="*{email}" placeholder="Email" required />
-			<input type="password" th:field="*{password}" placeholder="Password" required minlength="6" /> 
-			<input type="text" th:field="*{firstName}" placeholder="First Name" required minlength="2" />
-			<input type="text" th:field="*{lastName}" placeholder="Last Name" required minlength="2" />
-			<button type="submit">Next</button>
+<div class="signup-container">
+	<div class="signup-container-col1"></div>
+	<div class="signup-container-col2">
+		<form th:action="@{${uri}}" th:object="${user}" method="post" class="signup-container-col2-card">
+			<div class="signup-container-col2-card-col1">
+                    <span class="signup-container-col2-card-col1-row1">
+                        <p>Softwright.in</p>
+                    </span>
+				<span class="signup-container-col2-card-col1-row2">
+                        <p>Create your account!</p>
+                    </span>
+				<span th:if="${error}" class="signup-container-col2-card-col1-row2">
+                        <p th:text="${error}" class="error-msg"></p>
+                    </span>
+			</div>
+			<div class="signup-container-col2-card-col2">
+				<label for="email">Enter your email<sup>*</sup> <small>(required)</small> </label>
+				<input type="text" th:field="*{email}" id="email" name="email">
+				<span id="emailValidationError" class="error-message"></span>
+				<script>
+                        function isValidEmail(email) {
+                            return email.match(
+                                /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                            );
+                        };
+                        function validateEmail(event, $result) {
+                            let email = event.target.value;
+                            $result.innerText = isValidEmail(email) ? '' : 'Please enter a valid email!'
+                        }
+                        document.getElementById('email').addEventListener('input', function (event) {
+                            validateEmail(event, document.getElementById('emailValidationError'));
+                        });
+                    </script>
+				<label for="password">Enter your password<sup>*</sup> <small>(required)</small> </label>
+				<input id="password" type="password" th:field="*{password}" name="password">
+				<div class="signup-container-col2-card-col2-strength-bar">
+					<span class="progress" id="strengthBar"></span>
+				</div>
+				<span id="passValidationError" class="error-message"></span>
+				<script>
+                        function isValidPassword(pw) {
+                            return /[A-Z]/.test(pw) &&
+                                /[a-z]/.test(pw) &&
+                                /[0-9]/.test(pw) &&
+                                /[^A-Za-z0-9]/.test(pw) &&
+                                pw.length > 6;
+                        };
+                        function validatePassword(event, $error, $progress) {
+                            let pw = event.target.value;
+                            if (isValidPassword(pw)) {
+                                $error.innerText = '';
+                                l = pw.length;
+                                if (l >= 6 && l < 11) {
+                                    $progress.style.width = '25%';
+                                    $progress.style.backgroundColor = '#FFD600';
+                                }
+                                if (l >= 11 && l < 16) {
+                                    $progress.style.width = '75%';
+                                    $progress.style.backgroundColor = '#64DD17';
+                                }
+                                if (l >= 16) {
+                                    $progress.style.width = '100%';
+                                    $progress.style.backgroundColor = '#00C853';
+                                }
+                            } else {
+                                $error.innerText =
+                                    'Password should be atleast 6 characters and contain combination of upper & lower case alphabets, digits and special characters';
+                                $progress.style.width = '25%';
+                                $progress.style.backgroundColor = '#DD2C00';
+                            }
+                        }
+                        document.getElementById('password').addEventListener('input', function (event) {
+                            validatePassword(event, document.getElementById('passValidationError'), document.getElementById('strengthBar'));
+                        });
+                    </script>
+				<label for="password-confirm">
+					Re-enter your password to confirm<sup>*</sup>
+					<small>(required)</small>
+				</label>
+				<input id="retypePassword" type="password" name="password-confirm">
+				<span id="passwordMatchError" class="error-message"></span>
+				<script>
+                        document.getElementById('retypePassword').addEventListener('input', function (event) {
+                            if (event.target.value && event.target.value !== '' && event.target.value !== document.getElementById('password').value) {
+                                document.getElementById('passwordMatchError').innerText = 'Oops, the passwords entered do not match! Please check!';
+                            } else {
+                                document.getElementById('passwordMatchError').innerText = '';
+                            }
+                        });
+                    </script>
+				<button id="showPassword" type="button" (click)="showPassword=!showPassword">show password</button>
+				<script>
+                        document.getElementById('showPassword').addEventListener('click', function (event) {
+                            let passInput = document.getElementById('password');
+                            if (passInput) {
+                                let currType = passInput.getAttribute('type');
+                                if (currType === 'password') {
+                                    passInput.setAttribute('type', 'text');
+                                    event.target.innerText = 'hide password';
+                                } else {
+                                    passInput.setAttribute('type', 'password');
+                                    event.target.innerText = 'show password';
+                                }
+                            }
+                        });
+                    </script>
+				<label for="email">Enter your First Name<sup>*</sup> <small>(required)</small> </label>
+				<input type="text" th:field="*{firstName}" name="email">
+				<label for="email">Enter your Last Name<sup>*</sup> <small>(required)</small> </label>
+				<input type="text" th:field="*{lastName}" name="email">
+			</div>
+			<div class="signup-container-col2-card-col5">
+				<a href="/" class="signup-container-col2-card-col5-btn1">
+					log in
+				</a>
+				<div class="spacer"></div>
+				<button type="submit" class="signup-container-col2-card-col5-btn2">sign up</button>
+			</div>
+			<div class="signup-container-col2-card-col6">
+				<small id="copyright">
+					<script>
+                            document.getElementById('copyright').innerHTML =
+                                `&#xA9; softwright.in ${new Date().getFullYear()}`;
+                        </script>
+				</small>
+			</div>
 		</form>
-		<div class="sf-form-card-footer">
-			<div class="sf-form-card-footer-title">softwright.in</div>
-		</div>
 	</div>
+	<div class="signup-container-col3"></div>
+</div>
 </body>
 
 </html>
