@@ -10,6 +10,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.validation.Valid;
+
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -142,12 +144,12 @@ public class UserController {
 				}
 			} else {
 				_logger.log(Level.INFO, "POST /login complete Error: User not found.");
-				return new RedirectView("/login?error=Invalid Username or Password&redirectUri="+redirectUri);
+				return new RedirectView("/auth/login?error=Invalid Username or Password&redirectUri="+redirectUri);
 			}
 		}
 		catch (Exception ex) {
 			_logger.log(Level.WARNING, "POST /login complete Error: Exception "+ex);
-			return new RedirectView("/login?error=InternalServerError&redirectUri="+redirectUri);
+			return new RedirectView("/auth/login?error=InternalServerError&redirectUri="+redirectUri);
 		}
 	}
 	
@@ -183,6 +185,10 @@ public class UserController {
 				_logger.log(Level.INFO, "GET /verify complete Success");
 				return ResponseEntity.status(HttpStatus.OK).body("Authorized");
 			}
+		}
+		catch (TokenExpiredException ex) {
+			_logger.log(Level.WARNING, "GET /verify complete Error: Exception "+ex);
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
 		}
 		catch (Exception ex) {
 			_logger.log(Level.WARNING, "GET /verify complete Error: Exception "+ex);
