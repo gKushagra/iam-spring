@@ -48,6 +48,9 @@ public class UserController {
 
 	@Value("${iam.app.mail.from}")
 	private String from;
+
+	@Value("${iam.app.domain}")
+	private String domain;
 	
 	@Autowired
 	UserRepository userRepository;
@@ -245,12 +248,7 @@ public class UserController {
 				Session session = new Session(user.getId(), issued, expiry);
 				session.setResetSession(true);
 				sessionRepository.save(session);
-				URL url = new URL(request.getRequestURL().toString());
-				String domain = url.getProtocol() + "://" + url.getHost();
-				if (url.getPort() > 0) {
-					domain += ":" + url.getPort();
-				}
-				String resetLink = domain.toString() + "/auth/reset-link?redirectUri=" + redirectUri + "&id=" + session.getId();
+				String resetLink = domain + "/auth/reset-link?redirectUri=" + redirectUri + "&id=" + session.getId();
 				emailUtil().send(uri, from, req.getEmail(), EmailTemplate.RESET_LINK, Optional.of(resetLink), Optional.empty());
 			} else {
 				_logger.log(Level.INFO, "POST /reset complete Error: User not found.");
