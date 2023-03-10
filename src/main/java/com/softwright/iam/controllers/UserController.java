@@ -42,6 +42,12 @@ public class UserController {
 
 	@Value("${iam.app.jwtSecret}")
 	private String secret;
+
+	@Value("${iam.app.mail.uri}")
+	private String uri;
+
+	@Value("${iam.app.mail.from}")
+	private String from;
 	
 	@Autowired
 	UserRepository userRepository;
@@ -245,7 +251,7 @@ public class UserController {
 					domain += ":" + url.getPort();
 				}
 				String resetLink = domain.toString() + "/auth/reset-link?redirectUri=" + redirectUri + "&id=" + session.getId();
-				emailUtil().send(req.getEmail(), EmailTemplate.RESET_LINK, Optional.of(resetLink), Optional.empty());
+				emailUtil().send(uri, from, req.getEmail(), EmailTemplate.RESET_LINK, Optional.of(resetLink), Optional.empty());
 			} else {
 				_logger.log(Level.INFO, "POST /reset complete Error: User not found.");
 			}
@@ -292,7 +298,7 @@ public class UserController {
 					userRepository.updateHashAndLastUpdated(passwordEncoder().encode(req.getPassword()), new Date(), user.getId());
 					sessionRepository.updateResetProcessed(true, existingSession.getId());
 					String notificationBody = "Your password reset request was processed successfully.";
-					emailUtil().send(user.getEmail(), EmailTemplate.NOTIFICATION, Optional.empty(), Optional.of(notificationBody));
+					emailUtil().send(uri, from, user.getEmail(), EmailTemplate.NOTIFICATION, Optional.empty(), Optional.of(notificationBody));
 				} else { isInvalid = true; }
 			}
 		}

@@ -3,6 +3,7 @@ package com.softwright.iam.utils;
 import com.softwright.iam.models.EmailTemplate;
 import com.softwright.iam.models.MailRequest;
 import com.softwright.iam.models.MailResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -17,7 +18,7 @@ public class Email {
 
     private final static Logger _logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-    public void send(String to, EmailTemplate template, Optional<String> link, Optional<String> notificationBody) throws Exception {
+    public void send(String uri, String from, String to, EmailTemplate template, Optional<String> link, Optional<String> notificationBody) throws Exception {
         _logger.log(Level.INFO,  "send email begin");
         if(to.isEmpty()
                 || (template.equals(EmailTemplate.RESET_LINK) && link.isEmpty())
@@ -25,8 +26,6 @@ public class Email {
             throw new Exception("Invalid Parameters");
         }
         String html = "";
-        String uri = "https://mail.softwright.in/sendgrid";
-        String from = "support@softwright.in";
         String subject = "Reset Request";
         String text = "Reset Link ";
         try {
@@ -46,6 +45,7 @@ public class Email {
         MailRequest body =  new MailRequest(to, from, subject, html, text);
         HttpEntity<MailRequest> entity = new HttpEntity(body, headers);
         try {
+            _logger.log(Level.INFO, "send email --> uri " + uri);
             ResponseEntity<MailResponse> response = emailReq.exchange(uri, HttpMethod.POST, entity, MailResponse.class);
             _logger.log(Level.INFO,  "send email --> response " + response);
         } catch (Exception ex) {
