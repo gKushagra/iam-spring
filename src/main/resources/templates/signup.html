@@ -3,11 +3,13 @@
 
 <head>
 	<meta charset="ISO-8859-1">
-	<link rel="icon" type="image/svg" href="https://upload.wikimedia.org/wikipedia/commons/3/37/Encrypt_icon.svg">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="apple-touch-icon" sizes="180x180" href="https://cdn.opensourcedit.com/sso.apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="https://cdn.opensourcedit.com/sso.favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="https://cdn.opensourcedit.com/sso.favicon-16x16.png">
+	<link rel="stylesheet" href="https://cdn.opensourcedit.com/auth.signup.css">
+	<script src="https://cdn.opensourcedit.com/auth.main.js"></script>
 	<title>SSO Signup</title>
-	<style type="text/css">
- 		body {font-family: "Poppins", sans-serif;font-size: 18px;font-weight: 400;}.spacer {flex-grow: 1;}.error-message {font-size: 12px;color: #d50000;font-weight: lighter;}button:hover, input:focus {animation: fadein 1s;}@keyframes fadein {from {opacity: 0;}to {opacity: 1;}}.progress {display: block;width: 100%;height: 4px;background-color: #fff;border: none;border-radius: 30px;}.signup-container {width: 100% !important;height: 98vh !important;display: flex;flex-direction: column;flex-wrap: nowrap;align-items: flex-start;justify-content: flex-start;background-color: #e8f5e9;border-radius: 10px;animation: fadein 2s;}.signup-container-col1 {width: 100%;flex-grow: 1;}.signup-container-col3 {width: 100%;flex-grow: 1;}.signup-container-col2 {width: 100%;display: flex;flex-direction: row;flex-wrap: nowrap;align-items: center;justify-content: center;}.signup-container-col2-card {border: 0.9px solid #e0e0e0;border-radius: 10px;width: 390px;box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 0 0 0 rgba(0, 0, 0, 0);display: flex;flex-direction: column;flex-wrap: nowrap;align-items: center;justify-content: center;padding: 8px 10px 8px 10px;margin: 1px;background-color: #fff;}.signup-container-col2-card-col1 {width: calc(100% - 14px);margin: 1px;padding: 4px 6px 4px 6px;display: flex;flex-direction: column;justify-content: flex-start;align-items: flex-start;}.signup-container-col2-card-col1-row1 p {font-size: 22px;color: #00c853;font-weight: 500;margin-block-start: 4px;margin-block-end: 1px;letter-spacing: 0.5px;}.signup-container-col2-card-col1-row1 p:hover {text-decoration: underline;cursor: pointer;}.signup-container-col2-card-col1-row2 p {font-size: 17px;color: #212121;font-weight: 500;margin-block-start: 2px;margin-block-end: 8px;letter-spacing: 0.5px;}.signup-container-col2-card-col2 {width: calc(100% - 14px);margin: 1px;padding: 4px 6px 4px 6px;display: flex;flex-direction: column;justify-content: center;align-items: center;}.signup-container-col2-card-col2 label {width: 100%;font-size: 14px;text-align: left !important;}.signup-container-col2-card-col2 input {width: calc(100% - 32px);border: 1.5px solid #e0e0e0;border-radius: 4px;background-color: #fff;padding: 6px 12px 6px 12px;margin: 3px 4px 14px 4px;color: #212121;font-size: 15px;height: 32px;letter-spacing: 0.5px;font-family: "Poppins", sans-serif;font-weight: 400;}.signup-container-col2-card-col2 input:focus {outline: #00c853 !important;border: 1.75px solid #00c853;}.signup-container-col2-card-col2-strength-bar {width: calc(100% - 32px);margin: 0 0 4px 0;padding: 0;}.signup-container-col2-card-col2 button {border: none;border-radius: 0;background-color: #fff;color: #00c853;font-size: 11px;margin-bottom: 8px;}.signup-container-col2-card-col2 button:hover {text-decoration: underline;cursor: pointer;}.signup-container-col2-card-col5 {width: calc(100% - 14px);margin: 1px;padding: 4px 6px 4px 6px;display: flex;flex-wrap: nowrap;flex-direction: row;justify-content: flex-start;align-items: center;}.signup-container-col2-card-col5-btn1 {border: none;border-radius: 0;background-color: #fff;font-size: 16px;color: #00c853;}.signup-container-col2-card-col5-btn1:hover {cursor: pointer;text-decoration: underline;}.signup-container-col2-card-col5-btn2 {border: none;border-radius: 4px;background-color: #00c853;color: #fff;font-weight: 500;font-size: 21px;padding: 6px 12px 6px 12px;}.signup-container-col2-card-col5-btn2:hover {cursor: pointer;background-color: #fff;color: #00c853;text-decoration: underline;}.signup-container-col2-card-col6 {width: calc(100% - 14px);margin: 12px 1px 1px 1px;padding: 6px auto 2px auto;}.signup-container-col2-card-col6 small {font-size: 11px;color: #bdbdbd;font-weight: 500;}
-    </style>
 </head>
 
 <body>
@@ -23,124 +25,58 @@
                         <p>Create your account!</p>
                     </span>
 				<span th:if="${error}" class="signup-container-col2-card-col1-row2">
-                        <p th:text="${error}" class="error-msg"></p>
+                        <p th:text="${error}" class="error-message"></p>
                     </span>
 			</div>
 			<div class="signup-container-col2-card-col2">
 				<label for="email">Enter your email<sup>*</sup> <small>(required)</small> </label>
-				<input type="text" th:field="*{email}" id="email" name="email">
+				<input type="text" th:field="*{email}" id="email" name="email" required>
 				<span id="emailValidationError" class="error-message"></span>
-				<script>
-                        function isValidEmail(email) {
-                            return email.match(
-                                /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-                            );
-                        };
-                        function validateEmail(event, $result) {
-                            let email = event.target.value;
-                            $result.innerText = isValidEmail(email) ? '' : 'Please enter a valid email!'
-                        }
-                        document.getElementById('email').addEventListener('input', function (event) {
-                            validateEmail(event, document.getElementById('emailValidationError'));
-                        });
-                    </script>
 				<label for="password">Enter your password<sup>*</sup> <small>(required)</small> </label>
-				<input id="password" type="password" th:field="*{password}" name="password">
+				<input id="password" type="password" th:field="*{password}" name="password" required>
 				<div class="signup-container-col2-card-col2-strength-bar">
 					<span class="progress" id="strengthBar"></span>
 				</div>
 				<span id="passValidationError" class="error-message"></span>
-				<script>
-                        function isValidPassword(pw) {
-                            return /[A-Z]/.test(pw) &&
-                                /[a-z]/.test(pw) &&
-                                /[0-9]/.test(pw) &&
-                                /[^A-Za-z0-9]/.test(pw) &&
-                                pw.length > 6;
-                        };
-                        function validatePassword(event, $error, $progress) {
-                            let pw = event.target.value;
-                            if (isValidPassword(pw)) {
-                                $error.innerText = '';
-                                l = pw.length;
-                                if (l >= 6 && l < 11) {
-                                    $progress.style.width = '25%';
-                                    $progress.style.backgroundColor = '#FFD600';
-                                }
-                                if (l >= 11 && l < 16) {
-                                    $progress.style.width = '75%';
-                                    $progress.style.backgroundColor = '#64DD17';
-                                }
-                                if (l >= 16) {
-                                    $progress.style.width = '100%';
-                                    $progress.style.backgroundColor = '#00C853';
-                                }
-                            } else {
-                                $error.innerText =
-                                    'Password should be atleast 6 characters and contain combination of upper & lower case alphabets, digits and special characters';
-                                $progress.style.width = '25%';
-                                $progress.style.backgroundColor = '#DD2C00';
-                            }
-                        }
-                        document.getElementById('password').addEventListener('input', function (event) {
-                            validatePassword(event, document.getElementById('passValidationError'), document.getElementById('strengthBar'));
-                        });
-                    </script>
 				<label for="password-confirm">
 					Re-enter your password to confirm<sup>*</sup>
 					<small>(required)</small>
 				</label>
-				<input id="retypePassword" type="password" name="password-confirm">
+				<input id="retypePassword" type="password" name="passwordConfirm" required>
 				<span id="passwordMatchError" class="error-message"></span>
-				<script>
-                        document.getElementById('retypePassword').addEventListener('input', function (event) {
-                            if (event.target.value && event.target.value !== '' && event.target.value !== document.getElementById('password').value) {
-                                document.getElementById('passwordMatchError').innerText = 'Oops, the passwords entered do not match! Please check!';
-                            } else {
-                                document.getElementById('passwordMatchError').innerText = '';
-                            }
-                        });
-                    </script>
 				<button id="showPassword" type="button" (click)="showPassword=!showPassword">show password</button>
-				<script>
-                        document.getElementById('showPassword').addEventListener('click', function (event) {
-                            let passInput = document.getElementById('password');
-                            if (passInput) {
-                                let currType = passInput.getAttribute('type');
-                                if (currType === 'password') {
-                                    passInput.setAttribute('type', 'text');
-                                    event.target.innerText = 'hide password';
-                                } else {
-                                    passInput.setAttribute('type', 'password');
-                                    event.target.innerText = 'show password';
-                                }
-                            }
-                        });
-                    </script>
-				<label for="email">Enter your First Name<sup>*</sup> <small>(required)</small> </label>
-				<input type="text" th:field="*{firstName}" name="email">
-				<label for="email">Enter your Last Name<sup>*</sup> <small>(required)</small> </label>
-				<input type="text" th:field="*{lastName}" name="email">
+				<label for="firstName">Enter your First Name<sup>*</sup> <small>(required)</small> </label>
+				<input type="text" th:field="*{firstName}" name="firstName" required>
+				<label for="lastName">Enter your Last Name<sup>*</sup> <small>(required)</small> </label>
+				<input type="text" th:field="*{lastName}" name="lastName" required>
 			</div>
 			<div class="signup-container-col2-card-col5">
 				<a href="/" class="signup-container-col2-card-col5-btn1">
 					log in
 				</a>
 				<div class="spacer"></div>
-				<button type="submit" class="signup-container-col2-card-col5-btn2">sign up</button>
+				<button id="submit" type="submit" class="signup-container-col2-card-col5-btn2">sign up</button>
 			</div>
 			<div class="signup-container-col2-card-col6">
-				<small id="copyright">
-					<script>
-                            document.getElementById('copyright').innerHTML =
-                                `&#xA9; softwright.in ${new Date().getFullYear()}`;
-                        </script>
-				</small>
+				<small id="copyright"></small>
 			</div>
 		</form>
 	</div>
 	<div class="signup-container-col3"></div>
 </div>
+
+<script>
+        emailValidationListener(document.getElementById('email'), document.getElementById('emailValidationError'),
+        	[document.getElementById('submit')]);
+        passwordValidationListener(document.getElementById('password'),
+            document.getElementById('passValidationError'), document.getElementById('strengthBar'),
+            [document.getElementById('submit')]);
+        togglePassword(document.getElementById('showPassword'), document.getElementById('password'));
+        matchPasswords(document.getElementById('password'),
+            document.getElementById('retypePassword'), document.getElementById('passwordMatchError'),
+            [document.getElementById('submit')]);
+        footerStatement(document.getElementById('copyright'));
+    </script>
 </body>
 
 </html>

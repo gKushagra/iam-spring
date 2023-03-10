@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="ISO-8859-1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.opensourcedit.com/sso.apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.opensourcedit.com/sso.favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.opensourcedit.com/sso.favicon-16x16.png">
+  <link rel="stylesheet" href="https://cdn.opensourcedit.com/auth.reset.css">
+  <script src="https://cdn.opensourcedit.com/auth.main.js"></script>
+  <title>SSO Reset</title>
+</head>
+
+<body>
+<div class="reset-container">
+  <div class="reset-container-col1"></div>
+  <div class="reset-container-col2">
+    <form th:action="@{${uri}}" th:object="${user}" method="post" class="reset-container-col2-card">
+      <div class="reset-container-col2-card-col1">
+                    <span>
+                        <p>Softwright.in</p>
+                    </span>
+      </div>
+      <div class="reset-container-col2-card-col2">
+        <p th:text="${message}" id="message"></p>
+      </div>
+      <div th:if="${newRequest}" class="reset-container-col2-card-col3">
+        <input th:field="*{email}" id="email" type="text" placeholder="Email" required>
+      </div>
+      <div th:if="${newRequest}" class="reset-container-col2-card-col3">
+        <small id="emailValidationError" class="error-message"></small>
+      </div>
+      <div th:if="${newRequest}" class="reset-container-col2-card-col4">
+        <div class="spacer"></div>
+        <button id="submit" type="submit" class="reset-container-col2-card-col4-btn2">request link</button>
+      </div>
+      <div class="reset-container-col2-card-col6">
+        <small id="copyright"></small>
+      </div>
+    </form>
+  </div>
+  <div class="reset-container-col3"></div>
+</div>
+
+<script th:if="${newRequest}">
+  emailValidationListener(document.getElementById('email'), document.getElementById('emailValidationError'),
+    [document.getElementById('submit')]);
+</script>
+<script>
+  footerStatement(document.getElementById('copyright'));
+</script>
+</body>
+
+</html>
