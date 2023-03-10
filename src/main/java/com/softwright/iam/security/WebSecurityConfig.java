@@ -14,8 +14,8 @@ public class WebSecurityConfig {
 		http.cors().and().csrf().disable()
 			.authorizeHttpRequests()
 			.requestMatchers("/auth/*").permitAll()
-			.requestMatchers("/webjars/*").permitAll();
-			
+			.requestMatchers("/org/*").permitAll();
+
 		return http.build();
 	}
 	
