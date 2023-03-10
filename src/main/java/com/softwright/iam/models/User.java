@@ -1,7 +1,7 @@
 package com.softwright.iam.models;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -27,10 +27,10 @@ public class User {
 	private String lastName;
 	
 	@Column(nullable=false)
-	private LocalDateTime created;
+	private Date created;
 	
 	@Column(nullable=false)
-	private LocalDateTime lastUpdated;
+	private Date lastUpdated;
 	
 	public User() {}
 	
@@ -40,8 +40,8 @@ public class User {
 		this.hash = hash;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.created = LocalDateTime.now();
-		this.lastUpdated = LocalDateTime.now();
+		this.created = new Date();
+		this.lastUpdated = new Date();
 	}
 
 	public UUID getId() {
@@ -84,19 +84,19 @@ public class User {
 		this.lastName = lastName;
 	}
 
-	public LocalDateTime getCreated() {
+	public Date getCreated() {
 		return created;
 	}
 
-	public void setCreated(LocalDateTime created) {
+	public void setCreated(Date created) {
 		this.created = created;
 	}
 
-	public LocalDateTime getLastUpdated() {
+	public Date getLastUpdated() {
 		return lastUpdated;
 	}
 
-	public void setLastUpdated(LocalDateTime lastUpdated) {
+	public void setLastUpdated(Date lastUpdated) {
 		this.lastUpdated = lastUpdated;
 	}
 }

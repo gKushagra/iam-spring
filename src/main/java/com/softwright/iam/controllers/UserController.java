@@ -131,6 +131,7 @@ public class UserController {
 				Date curr = new Date();
 				Timestamp currTimestamp = new Timestamp(curr.getTime());
 				Session existingSession = sessionRepository.findByUserIdAndLessThanExpiry(user.getId(), issued);
+
 				if (existingSession != null && existingSession.getExpiry().compareTo(currTimestamp) > 0){
 					_logger.log(Level.INFO, "POST /login session already exists");
 					// use expiry from existing session
@@ -233,9 +234,10 @@ public class UserController {
 				_logger.log(Level.INFO, "POST /reset send email");
 				Calendar cal = Calendar.getInstance();
 				Date issued = cal.getTime();
-				cal.add(Calendar.MINUTE, 60);
+				cal.add(Calendar.MINUTE, 5);
 				Date expiry = cal.getTime();
 				Session session = new Session(user.getId(), issued, expiry);
+				session.setResetSession(true);
 				sessionRepository.save(session);
 				URL url = new URL(request.getRequestURL().toString());
 				String domain = url.getProtocol() + "://" + url.getHost();
@@ -243,7 +245,7 @@ public class UserController {
 					domain += ":" + url.getPort();
 				}
 				String resetLink = domain.toString() + "/auth/reset-link?redirectUri=" + redirectUri + "&id=" + session.getId();
-				emailUtil().send(req.getEmail(), EmailTemplate.RESET_LINK, Optional.of(resetLink));
+				emailUtil().send(req.getEmail(), EmailTemplate.RESET_LINK, Optional.of(resetLink), Optional.empty());
 			} else {
 				_logger.log(Level.INFO, "POST /reset complete Error: User not found.");
 			}
@@ -255,7 +257,7 @@ public class UserController {
 	}
 
 	@GetMapping("/reset-link")
-	public String processResetLink(@RequestParam String redirectUri, @RequestParam UUID id,  @RequestParam Optional<String> error, Model model) {
+	public String getResetPage(@RequestParam String redirectUri, @RequestParam UUID id,  @RequestParam Optional<String> error, Model model) {
 		_logger.log(Level.INFO,  "GET /reset-link begin");
 		model.addAttribute("user", new ProcessResetRequest());
 		model.addAttribute("uri", "/auth/reset-link?redirectUri="+redirectUri+"&id="+id);
@@ -270,5 +272,40 @@ public class UserController {
 		}
 		_logger.log(Level.INFO,  "GET /reset-link complete");
 		return "reset-link";
+	}
+
+	@PostMapping("/reset-link")
+	public RedirectView processResetRequest(@Valid ProcessResetRequest req, @RequestParam String redirectUri, @RequestParam UUID id) {
+		_logger.log(Level.INFO, "POST /reset-link begin");
+		boolean isInvalid = false;
+		try {
+			Date issued = new Date();
+			Timestamp issuedTimestamp = new Timestamp(issued.getTime());
+			Session existingSession = sessionRepository.findByIdAndLessThanExpiry(id, issued);
+			if (existingSession == null || (existingSession != null && existingSession.isResetSession() && !existingSession.isResetProcessed()
+					&& existingSession.getExpiry().compareTo(issuedTimestamp) <= 0)) { isInvalid = true; }
+			else {
+				_logger.log(Level.INFO, "POST /reset-link session exists");
+				User user = userRepository.findById(existingSession.getUserId());
+				if (user != null) {
+					_logger.log(Level.INFO, "POST /reset-link user exists");
+					userRepository.updateHashAndLastUpdated(passwordEncoder().encode(req.getPassword()), new Date(), user.getId());
+					sessionRepository.updateResetProcessed(true, existingSession.getId());
+					String notificationBody = "Your password reset request was processed successfully.";
+					emailUtil().send(user.getEmail(), EmailTemplate.NOTIFICATION, Optional.empty(), Optional.of(notificationBody));
+				} else { isInvalid = true; }
+			}
+		}
+		catch (Exception ex) {
+			_logger.log(Level.WARNING, "POST /reset complete Error: Exception "+ex);
+			return new RedirectView("/auth/reset-link?redirectUri="+redirectUri+"&id="+id+"&error=Unable to process this request. Please try again later!");
+		}
+		if (isInvalid) {
+			_logger.log(Level.INFO, "POST /reset complete Error: Invalid Request");
+			return new RedirectView("/auth/reset-link?redirectUri="+redirectUri+"&id="+id+"&error=Invalid Request");
+		} else {
+			_logger.log(Level.INFO, "POST /reset-link complete");
+			return new RedirectView("/auth/login?redirectUri="+redirectUri);
+		}
 	}
 }

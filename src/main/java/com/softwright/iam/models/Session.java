@@ -20,6 +20,12 @@ public class Session {
 	
 	@Column(nullable=false)
 	private Date expiry;
+
+	@Column()
+	private boolean isResetSession;
+
+	@Column
+	private boolean resetProcessed;
 	
 	public Session() {}
 
@@ -28,6 +34,8 @@ public class Session {
 		this.userId = userId;
 		this.created = created;
 		this.expiry = expiry;
+		this.isResetSession = false;
+		this.resetProcessed = false;
 	}
 	
 	public UUID getId() {
@@ -62,4 +70,19 @@ public class Session {
 		this.expiry = expiry;
 	}
 
+	public boolean isResetSession() {
+		return isResetSession;
+	}
+
+	public void setResetSession(boolean resetSession) {
+		isResetSession = resetSession;
+	}
+
+	public boolean isResetProcessed() {
+		return resetProcessed;
+	}
+
+	public void setResetProcessed(boolean resetProcessed) {
+		this.resetProcessed = resetProcessed;
+	}
 }
