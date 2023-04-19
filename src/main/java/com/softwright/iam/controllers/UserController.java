@@ -130,7 +130,11 @@ public class UserController {
 	public RedirectView loginUser(@Valid LoginRequest req, @RequestParam String redirectUri) {
 		_logger.log(Level.INFO, "POST /login begin");
 		try {
-			User user = userRepository.findByEmail(req.getEmail());	
+			User user = userRepository.findByEmail(req.getEmail());
+			if (user == null) {
+				_logger.log(Level.INFO, "POST /login complete Info: User not found");
+				return new RedirectView("/auth/signup?redirectUri="+redirectUri);
+			}
 			if (user != null && passwordEncoder().matches(req.getPassword(), user.getHash())) {
 				_logger.log(Level.INFO, "POST /login checking if session exists");
 				Calendar cal = Calendar.getInstance();
@@ -156,7 +160,7 @@ public class UserController {
 					return new RedirectView(redirectUri+"?token="+token);
 				}
 			} else {
-				_logger.log(Level.INFO, "POST /login complete Error: User not found.");
+				_logger.log(Level.INFO, "POST /login complete Error: Incorrect Username or Password");
 				return new RedirectView("/auth/login?error=Invalid Username or Password&redirectUri="+redirectUri);
 			}
 		}
