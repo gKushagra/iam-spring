@@ -12,11 +12,13 @@ public class WebSecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		
 		http.cors().and().csrf().disable()
-				.authorizeHttpRequests()
-				.requestMatchers("/auth/*").permitAll()
-				.requestMatchers("/user/*").permitAll()
-				.requestMatchers("/webjars/*").permitAll();
-			
+			.authorizeHttpRequests()
+			.requestMatchers("/auth/*").permitAll()
+			.requestMatchers("/org/*").permitAll()
+			.requestMatchers("/user/*").permitAll()
+			.requestMatchers("/auth/*/callback").permitAll()
+			.requestMatchers("/webjars/*").permitAll();
+
 		return http.build();
 	}
 	

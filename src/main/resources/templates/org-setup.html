@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.opensourcedit.com/sso.apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.opensourcedit.com/sso.favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.opensourcedit.com/sso.favicon-16x16.png">
+  <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css">
+  <script src="https://cdn.opensourcedit.com/auth.main@v1.1.0.js"></script>
+  <title>SSO Setup Organization</title>
+</head>
+
+<body>
+<div class="bg-white h-screen">
+  <div class="w-full flex flex-wrap justify-center">
+    <div class="w-full lg:w-6/12 md:w-8/12 sm:w-12/12 flex flex-col">
+      <div class="flex justify-center md:justify-center pt-8 pb-2 md:pl-12 md:-mb-12">
+        <span class="bg-yellow-500 text-white font-bold text-xl p-4">Setup Organization</span>
+      </div>
+      <div class="flex flex-col justify-center md:justify-center my-4 pt-8 md:pt-0 px-8 md:px-24 lg:px-32">
+        <form th:action="@{${uri}}" th:object="${organization}" method="post"
+              class="flex flex-col pt-3 md:pt-8">
+          <div th:if="${error}" class="flex flex-col text-center p-1">
+            <small th:text="${error}" class="text-red-500 text-sm"></small>
+          </div>
+          <div class="flex flex-col pt-4">
+            <label for="name" class="text-md">Your Organization's Name</label>
+            <input th:field="*{name}" type="text" id="name" placeholder="e.g. Amazon, Google, etc."
+                   class="appearance-none border w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:border-yellow-500"
+                   required />
+          </div>
+          <div class="flex flex-col pt-4">
+            <label for="email" class="text-md">Your Email</label>
+            <input th:field="*{email}" type="email" id="email" placeholder="e.g. john.doe@xyzmail.com"
+                   class="appearance-none border w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:border-yellow-500"
+                   required />
+          </div>
+          <div class="flex flex-col p-1">
+            <small id="emailValidationError" class="text-red-500 text-sm"></small>
+          </div>
+          <div class="flex flex-col pt-4">
+            <label for="password" class="text-md">Enter a Password</label>
+            <input th:field="*{password}" type="password" id="password"
+                   class="appearance-none border w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:border-yellow-500"
+                   required />
+          </div>
+          <div class="flex flex-col pt-1">
+            <button id="showPassword" type="button"
+                    class="bg-transparent text-yellow-500 border-none ml-auto hover:text-black-400">
+              show password
+            </button>
+          </div>
+          <div class="flex flex-col pt-1">
+            <span class="bg-white block w-100 h-1 rounded" id="strengthBar"></span>
+          </div>
+          <div class="flex flex-col p-1">
+            <span id="passValidationError" class="text-red-500 text-sm"></span>
+          </div>
+          <div class="flex flex-col pt-4">
+            <label for="retypePassword" class="text-md">Retype the Password</label>
+            <input id="retypePassword" name="retypePassword" type="password"
+                   class="appearance-none border w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:border-yellow-500"
+                   required />
+          </div>
+          <div class="flex flex-col pt-4">
+            <span id="passwordMatchError" class="text-red-500"></span>
+          </div>
+          <div class="flex flex-col pt-4">
+            <label for="name" class="text-md">Your First Name</label>
+            <input th:field="*{firstName}" type="text" id="firstName" placeholder="e.g. John"
+                   class="appearance-none border w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:border-yellow-500"
+                   required />
+          </div>
+          <div class="flex flex-col pt-4">
+            <label for="name" class="text-md">Your Last Name</label>
+            <input th:field="*{lastName}" type="text" id="lastName" placeholder="e.g. Doe"
+                   class="appearance-none border w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:border-yellow-500"
+                   required />
+          </div>
+
+          <input id="submit" type="submit" value="Next"
+                 class="bg-yellow-500 text-white font-bold text-lg hover:bg-gray-700 p-2 mt-8" />
+        </form>
+        <div class="text-center pt-6 pb-2">
+          <p>Already have an account? <a th:href="@{${loginUri}}"
+                                         class="underline font-semibold text-yellow-500">Login</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="text-center pt-1 pb-1">
+    <small id="copyright"></small>
+  </div>
+</div>
+
+<script>
+        emailValidationListener(document.getElementById('email'), document.getElementById('emailValidationError'));
+        passwordValidationListener(document.getElementById('password'),
+            document.getElementById('passValidationError'), document.getElementById('strengthBar'));
+        togglePassword(document.getElementById('showPassword'), document.getElementById('password'));
+        matchPasswords(document.getElementById('password'),
+            document.getElementById('retypePassword'), document.getElementById('passwordMatchError'));
+        footerStatement(document.getElementById('copyright'));
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.opensourcedit.com/sso.apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.opensourcedit.com/sso.favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.opensourcedit.com/sso.favicon-16x16.png">
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css">
+    <title th:text="${pageTitle}"></title>
+    <script src="https://cdn.opensourcedit.com/auth.main@v1.1.0.js"></script>
+</head>
+
+<body>
+    <div class="bg-white h-screen">
+        <div class="w-full flex flex-wrap justify-center">
+            <div class="w-full lg:w-6/12 md:w-8/12 sm:w-12/12 flex flex-col">
+                <span class="text-black font-bold text-xl p-4">
+                    Error 404: The page you are looking for does not exist.
+                </span>
+            </div>
+        </div>
+        <div class="text-center pt-1 pb-1">
+            <small id="copyright"></small>
+        </div>
+    </div>
+</body>
+
+</html>
