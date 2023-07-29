@@ -38,6 +38,7 @@ public class OrgController {
     @GetMapping("/setup")
     public String getOrganizationSetupPage(@RequestParam Optional<String> error, Model model) {
         _logger.log(Level.INFO,  "GET /setup begin");
+        model.addAttribute("pageTitle", "SSO Setup Organization");
         model.addAttribute("organization", new OrgSetupRequest());
         model.addAttribute("uri", "/org/setup?redirectUri="+"/org/dashboard");
         model.addAttribute("loginUri", "/auth/login?redirectUri="+"/auth/setup/callback");
@@ -89,8 +90,10 @@ public class OrgController {
     }
 
     @GetMapping("/dashboard")
-    public String dashboard() {
-        _logger.log(Level.INFO,  "GET /dashboard");
+    public String dashboard(Model model) {
+        _logger.log(Level.INFO,  "GET /dashboard begin");
+        model.addAttribute("pageTitle", "SSO Dashboard");
+        _logger.log(Level.INFO,  "GET /dashboard complete");
         return "dashboard";
     }
 }

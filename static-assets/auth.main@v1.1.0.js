@@ -90,26 +90,30 @@ function togglePassword($showPasswordBtn, $passwordInput) {
 }
 
 function footerStatement($el) {
-    $el.innerHTML = `&#xA9; softwright.in ${new Date().getFullYear()}`;
+    $el.innerHTML = `&#xA9; opensourcedit.com ${new Date().getFullYear()}`;
 }
 
-function setToken() {
-    return new Promise(function(resolve, reject) {
-        try {
-            localStorage.setItem('sf-token', new URLSearchParams(window.location.search).get('token'));
-            resolve(true);
-        }
-        catch (error) {
-            console.error(error);
-            reject(false);
-        }
-    });
-}
-
-function redirectTo(id, attribute) {
+function redirectTo(id, attribute = 'data-value') {
     const redirectUri = document.getElementById(id)
         .getAttribute(attribute);
     const redirectLink = document.createElement('a');
     redirectLink.href = redirectUri;
     redirectLink.click();
+}
+
+function createSession(pageDataEl, redirectPageDataEl, redirectLoginDataEl, errorDataEl, redirectErrorEl) {
+    const error = document.getElementById(errorDataEl).getAttribute('data-value');
+    if (error === '404') {
+        redirectTo(redirectErrorEl);
+    } else {
+        const token = new URLSearchParams(window.location.search).get('token');
+        const page = document.getElementById(pageDataEl).getAttribute('data-value');
+        if (!token || token === '' || !page || page === '') {
+            localStorage.clear();
+            redirectTo(redirectLoginDataEl);
+        }
+        localStorage.setItem('_page', page);
+        localStorage.setItem('sf-token', token);
+        redirectTo(redirectPageDataEl);
+    }
 }
