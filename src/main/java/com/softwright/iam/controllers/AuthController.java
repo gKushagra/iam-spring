@@ -1,6 +1,5 @@
 package com.softwright.iam.controllers;
 
-import java.net.URL;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,8 +17,6 @@ import com.softwright.iam.utils.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +33,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @CrossOrigin(origins="*",maxAge=3600)
 @Controller
 @RequestMapping("/auth")
-public class UserController {
+public class AuthController {
 	
 	private final static Logger _logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
@@ -311,5 +308,14 @@ public class UserController {
 			_logger.log(Level.INFO, "POST /reset-link complete");
 			return new RedirectView("/auth/login?redirectUri="+redirectUri);
 		}
+	}
+
+	@GetMapping("/{page}/callback")
+	public String authCallback(@PathVariable("page") String page, @RequestParam String token, Model model) {
+		_logger.log(Level.INFO,  "GET /callback begin");
+		model.addAttribute("token", new AuthCallback(token));
+		model.addAttribute("page", "/org/" + page);
+		_logger.log(Level.INFO,  "GET /callback complete");
+		return "callback";
 	}
 }

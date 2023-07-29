@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.opensourcedit.com/sso.apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.opensourcedit.com/sso.favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.opensourcedit.com/sso.favicon-16x16.png">
+    <title>SSO Dashboard</title>
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css">
+    <script src="https://cdn.opensourcedit.com/auth.main.js"></script>
+</head>
+
+<body>
+<div class="bg-white h-screen">
+    <div class="w-full flex flex-wrap justify-center">
+        <div class="w-full lg:w-6/12 md:w-8/12 sm:w-12/12 flex flex-col">
+            <div id="loading" class="flex start md:justify-center pt-8 pb-2 md:pl-12 md:-mb-12">
+                <span class="bg-yellow-500 text-white font-bold text-xl p-4">Loading</span>
+            </div>
+            <div id="dashboard-root" class="flex flex-col justify-center md:justify-center my-4 pt-8 md:pt-0 px-8 md:px-24 lg:px-32">
+                <!-- Dashboard -->
+                <span class="bg-yellow-500 text-white font-bold text-xl p-4">Dashboard</span>
+            </div>
+        </div>
+    </div>
+    <div class="text-center pt-1 pb-1">
+        <small id="copyright"></small>
+    </div>
+</div>
+
+<script type="module">
+    const loading = document.getElementById('loading');
+    const dashboardRoot = document.getElementById('dashboard-root');
+    loading.style.display = 'flex';
+    dashboardRoot.style.display = 'none';
+
+    import { libSSO, sso } from "https://cdn.jsdelivr.net/gh/gKushagra/cdn@v1.3.3/libs/libsso.js";
+    sso.api.get('sf-token', '/auth/verify?redirectUri=')
+        .then(function(response) { return response.text() })
+        .then(function(data) {
+            if (data === 'Authorized') {
+                loading.style.display = 'none';
+                dashboardRoot.style.display = 'flex';
+            }
+        }).catch(function(error) {
+            console.error(error);
+        });
+    footerStatement(document.getElementById('copyright'));
+</script>
+</body>
+
+</html>

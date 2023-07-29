@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.opensourcedit.com/sso.apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.opensourcedit.com/sso.favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.opensourcedit.com/sso.favicon-16x16.png">
+  <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css">
+  <title>SSO Callback</title>
+  <script src="https://cdn.opensourcedit.com/auth.main.js"></script>
+</head>
+
+<body>
+<div class="bg-white h-screen">
+  <div class="w-full flex flex-wrap justify-center">
+    <div class="w-full lg:w-6/12 md:w-8/12 sm:w-12/12 flex flex-col">
+      <div class="flex start md:justify-center pt-8 pb-2 md:pl-12 md:-mb-12">
+        <span class="bg-yellow-500 text-white font-bold text-xl p-4">Please Wait...</span>
+        <span id="redirect-uri" th:attr="data-value=${page}" style="display: none;"></span>
+        <span id="redirect-login" th:attr="data-value=${redirectLogin}" style="display: none;"></span>
+      </div>
+    </div>
+  </div>
+  <div class="text-center pt-1 pb-1">
+    <small id="copyright"></small>
+  </div>
+</div>
+
+<script>
+    footerStatement(document.getElementById('copyright'));
+    setToken().then(function(isSaved) { redirectTo('redirect-uri','data-value'); })
+      .catch(function(error){ redirectTo('redirect-login','data-value'); });
+</script>
+</body>
+
+</html>
