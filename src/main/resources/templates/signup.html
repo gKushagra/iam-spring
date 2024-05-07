@@ -4,12 +4,12 @@
 <head>
 	<meta charset="ISO-8859-1">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link rel="apple-touch-icon" sizes="180x180" href="https://cdn.opensourcedit.com/sso.apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="https://cdn.opensourcedit.com/sso.favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="https://cdn.opensourcedit.com/sso.favicon-16x16.png">
-	<link rel="stylesheet" href="https://cdn.opensourcedit.com/auth.signup.css">
-	<script src="https://cdn.opensourcedit.com/auth.main.js"></script>
-	<title>SSO Signup</title>
+	<link rel="apple-touch-icon" sizes="180x180" href="https://cdn.jsdelivr.net/gh/gKushagra/static-assets/sso.apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="https://cdn.jsdelivr.net/gh/gKushagra/static-assets/sso.favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="https://cdn.jsdelivr.net/gh/gKushagra/static-assets/sso.favicon-16x16.png">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/gKushagra/static-assets/auth.signup.css">
+	<script src="https://cdn.jsdelivr.net/gh/gKushagra/static-assets/auth.main@v1.1.0.js"></script>
+	<title th:text="${pageTitle}"></title>
 </head>
 
 <body>
@@ -19,7 +19,7 @@
 		<form th:action="@{${uri}}" th:object="${user}" method="post" class="signup-container-col2-card">
 			<div class="signup-container-col2-card-col1">
                     <span class="signup-container-col2-card-col1-row1">
-                        <p>Softwright.in</p>
+                        <p th:text="${pageTitle}"></p>
                     </span>
 				<span class="signup-container-col2-card-col1-row2">
                         <p>Create your account!</p>
