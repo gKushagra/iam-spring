@@ -4,13 +4,13 @@ import jakarta.validation.constraints.NotBlank;
 
 public class MailResponse {
     @NotBlank
-    public String text;
+    public String message;
 
-    public String getText() {
-        return text;
+    public String getMessage() {
+        return message;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setMessage(String text) {
+        this.message = text;
     }
 }
