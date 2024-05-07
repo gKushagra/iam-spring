@@ -4,13 +4,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.opensourcedit.com/sso.apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.opensourcedit.com/sso.favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.opensourcedit.com/sso.favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.jsdelivr.net/gh/gKushagra/static-assets/sso.apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.jsdelivr.net/gh/gKushagra/static-assets/sso.favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.jsdelivr.net/gh/gKushagra/static-assets/sso.favicon-16x16.png">
   <title th:text="${pageTitle}"></title>
   <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css">
-  <script src="https://cdn.opensourcedit.com/auth.main@v1.1.0.js"></script>
-  <script src="https://cdn.opensourcedit.com/sso.main@v1.0.0.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/gKushagra/static-assets/auth.main@v1.1.0.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/gKushagra/static-assets/sso.main@v1.0.0.js"></script>
 </head>
 
 <body>
@@ -21,23 +21,22 @@
           <span class="bg-yellow-500 text-white font-bold text-xl p-4" th:text="${pageTitle}"></span>
         </div>
         <div class="flex flex-col justify-center md:justify-center my-4 pt-8 md:pt-0 px-8 md:px-24 lg:px-32">
-          <form id="org-setup-form" th:action="@{${uri}}" th:object="${organization}" method="post"
-            class="flex flex-col pt-3 md:pt-8">
+          <form id="form" class="flex flex-col pt-3 md:pt-8">
             <div class="pt-3 md:pt-8">
               <span class="text-xl">Organization Details</span>
             </div>
-            <div th:if="${error}" class="flex flex-col text-center p-1">
-              <small th:text="${error}" class="text-red-500 text-sm"></small>
+            <div class="flex flex-col text-center p-1">
+              <small id="error" class="text-red-500 text-sm"></small>
             </div>
             <div class="flex flex-col pt-4">
               <label for="name" class="text-md">Name</label>
-              <input th:field="*{name}" type="text" id="name" placeholder="e.g. Amazon, Google, etc."
+              <input name="name" type="text" id="name" placeholder="e.g. Amazon, Google, etc."
                 class="appearance-none border w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:border-yellow-500"
                 required />
             </div>
             <div class="flex flex-col pt-4">
               <label for="email" class="text-md">Email</label>
-              <input th:field="*{email}" type="email" id="email" placeholder="e.g. john.doe@xyzmail.com"
+              <input name="email" type="email" id="email" placeholder="e.g. john.doe@xyzmail.com"
                 class="appearance-none border w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:border-yellow-500"
                 required />
             </div>
@@ -60,12 +59,39 @@
       verifyToken();
       emailValidationListener(document.getElementById('email'), document.getElementById('emailValidationError'));
       footerStatement(document.getElementById('copyright'));
-      const form = new FormData(document.getElementById('org-setup-form'));
-      const submitBtn = document.getElementById('submit-btn');
-      submitBtn.addEventListener('click', function (event) {
-        formData.append('userId', localStorage.getItem('_uid'));
-        console.log(form);
-        form.submit();
+      document.getElementById('submit-btn').addEventListener('click', function (event) {
+        document.getElementById('error').innerText = '';
+        const form = document.getElementById('form');
+        const inputs = form.querySelectorAll('input');
+        const payload = {};
+        inputs.forEach(function (input) {
+          payload[input.id] = input.value;
+        });
+        fetch(`/org/setup?userId=${localStorage.getItem('_uid')}`, {
+          method: 'POST',
+          body: JSON.stringify(payload),
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('sf-token')}` }
+        })
+          .then(function (response) {
+            if (response.status === 400) {
+              document.getElementById('error').innerText = 'Not Authorized';
+            }
+            else if (response.status === 500) {
+              document.getElementById('error').innerText = 'Internal Serve Error';
+            }
+            else { return response.json(); }
+          })
+          .then(function (data) {
+            if (data === 'Exists') {
+              document.getElementById('error').innerText = 'Organization Already Exists';
+            }
+            if (data === 'Created') {
+              const link = document.createElement('a');
+              link.href = '/org/dashboard';
+              link.click();
+            }
+          })
+          .catch(function (error) { console.error(error); })
       });
     })();
   </script>

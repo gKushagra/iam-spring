@@ -6,6 +6,8 @@ import com.softwright.iam.repository.RoleRepository;
 import com.softwright.iam.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.validation.Valid;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,33 +42,33 @@ public class OrgController {
     public String getOrganizationSetupPage(@RequestParam Optional<String> error, Model model) {
         _logger.log(Level.INFO,  "GET /setup begin");
         model.addAttribute("pageTitle", "SSO Setup Organization");
-        model.addAttribute("organization", new OrgSetupRequest());
-        model.addAttribute("uri", "/org/setup?redirectUri="+"/org/dashboard");
-        model.addAttribute("loginUri", "/auth/login?redirectUri="+"/auth/setup/callback");
-        _logger.log(Level.INFO,  "GET /setup --> error? "+error);
-        if (!error.isEmpty()) {
-            try {
-                model.addAttribute("error", error.get());
-            }
-            catch (NoSuchElementException ex) {
-                _logger.log(Level.WARNING, "GET /setup --> error value not avl.");
-            }
-        }
+//        model.addAttribute("organization", new OrgSetupRequest());
+//        model.addAttribute("uri", "/org/setup?redirectUri="+"/org/dashboard");
+//        model.addAttribute("loginUri", "/auth/login?redirectUri="+"/auth/setup/callback");
+//        _logger.log(Level.INFO,  "GET /setup --> error? "+error);
+//        if (!error.isEmpty()) {
+//            try {
+//                model.addAttribute("error", error.get());
+//            }
+//            catch (NoSuchElementException ex) {
+//                _logger.log(Level.WARNING, "GET /setup --> error value not avl.");
+//            }
+//        }
         _logger.log(Level.INFO,  "GET /setup complete");
         return "setup-org";
     }
 
     @PostMapping("/setup")
-    public RedirectView setupOrganization(@Valid OrgSetupRequest req) {
+    public ResponseEntity<?> setupOrganization(@Valid OrgSetupRequest req, @RequestParam UUID id) {
         _logger.log(Level.INFO, "POST /setup begin");
         try {
-            User existingUser = userRepository.findById(req.getUserId());
+            User existingUser = userRepository.findById(id);
             if (existingUser != null) {
                 _logger.log(Level.INFO, "POST /setup user exists");
                 Organization existingOrganization = orgRepository.findByNameAndUserId(req.getName(), existingUser.getId());
                 if (existingOrganization != null) {
                     _logger.log(Level.INFO, "POST /setup org exists");
-                    return new RedirectView("/org/setup?error=Organization Exists");
+                    return ResponseEntity.status(HttpStatus.OK).body("Exists");
                 } else {
                     _logger.log(Level.INFO, "POST /setup create org");
                     Organization org = new Organization(req.getName(), existingUser.getId());
@@ -79,14 +82,14 @@ public class OrgController {
                 }
             } else {
                 _logger.log(Level.INFO, "POST /setup user does not exists");
-                return new RedirectView("/org/setup?error=Bad Request");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad Request");
             }
         } catch (Exception ex) {
             _logger.log(Level.WARNING, "POST /setup complete Error: Exception "+ex);
-            return new RedirectView("/org/setup?error=InternalServerError");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
         _logger.log(Level.INFO, "POST /setup complete Success: organization created");
-        return new RedirectView("/org/dashboard");
+        return ResponseEntity.status(HttpStatus.OK).body("Created");
     }
 
     @GetMapping("/dashboard")
