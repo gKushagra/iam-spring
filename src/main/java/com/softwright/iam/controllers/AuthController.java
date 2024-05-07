@@ -69,6 +69,7 @@ public class AuthController {
 	@GetMapping("/signup")
 	public String registrationPage(@RequestParam String redirectUri, @RequestParam Optional<String> error, Model model) {
 		_logger.log(Level.INFO,  "GET /signup begin");
+		model.addAttribute("pageTitle", "SSO Sign Up");
 		model.addAttribute("user", new SignupRequest());
 		model.addAttribute("uri", "/auth/signup?redirectUri="+redirectUri);
 		_logger.log(Level.INFO,  "GET /signup --> error? "+error);
@@ -107,6 +108,7 @@ public class AuthController {
 	@GetMapping("/login")
 	public String loginPage(@RequestParam String redirectUri, @RequestParam Optional<String> error, Model model) {
 		_logger.log(Level.INFO, "GET /login begin");
+		model.addAttribute("pageTitle", "SSO Login");
 		model.addAttribute("user", new LoginRequest());
 		model.addAttribute("uri", "/auth/login?redirectUri="+redirectUri);
 		model.addAttribute("resetUri", "/auth/reset?redirectUri="+redirectUri+"&isNew=true");
@@ -214,6 +216,7 @@ public class AuthController {
 	public String requestResetLink(@RequestParam String redirectUri, @RequestParam Optional<String> message, @RequestParam boolean isNew, Model model) {
 		_logger.log(Level.INFO,  "GET /reset begin");
 		String msg = "Please enter your email!";
+		model.addAttribute("pageTitle", "SSO Reset");
 		model.addAttribute("user", new ResetRequest());
 		model.addAttribute("uri", "/auth/reset?redirectUri="+redirectUri);
 		if (!message.isEmpty()) {
@@ -312,5 +315,32 @@ public class AuthController {
 			_logger.log(Level.INFO, "POST /reset-link complete");
 			return new RedirectView("/auth/login?redirectUri="+redirectUri);
 		}
+	}
+
+	@GetMapping("/{page}/callback")
+	public String authCallback(@PathVariable("page") String page, @RequestParam String token, Model model) {
+		_logger.log(Level.INFO,  "GET /callback begin");
+		model.addAttribute("pageTitle", "SSO Callback");
+		boolean checkPage = page.equalsIgnoreCase(Pages.SETUP.toString())
+				|| page.equalsIgnoreCase(Pages.DASHBOARD.toString());
+		if (checkPage == false) {
+			model.addAttribute("error", "404");
+			model.addAttribute("redirectError", "/auth/error");
+			_logger.log(Level.INFO,  "GET /callback complete - Page Not Found");
+			return "callback";
+		}
+		model.addAttribute("page", page);
+		model.addAttribute("redirectPage", "/org/" + page);
+		model.addAttribute("redirectLogin", "/auth/login?redirectUri=/org/" + page + "/callback");
+		_logger.log(Level.INFO,  "GET /callback complete");
+		return "callback";
+	}
+
+	@GetMapping("/error")
+	public String errorPage(Model model) {
+		_logger.log(Level.INFO,  "GET /error begin");
+		model.addAttribute("pageTitle", "SSO Error");
+		_logger.log(Level.INFO,  "GET /error complete");
+		return "error";
 	}
 }
